@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: gtd
+      MYSQL_USER: gtd
+      MYSQL_PASSWORD: gtd
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    restart: always
+    volumes:
+      - mysql:/var/lib/mysql
+
+  gtd:
+    build: .
+    image: gtd
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    restart: always
+
+volumes:
+  mysql:
