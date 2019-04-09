@@ -151,34 +151,48 @@ gtd_handleEvent(_GTD_ON_TITLE,$pagename);
         echo ' ',(isset($titlefull))?$titlefull:$title;
     ?></h1>
 </div>
-<div id="menudiv">
-	<ul id="menulist">
-    <?php
-    $accesskeys=$class=$menuend='';
-    foreach ($menu as $index=>$line) {
-        if (empty($line['link'])) {
-            if ($line['label']==='separator') {
-                $class=" class='menuseparator' ";
-            } else {
-                echo "$menuend<li>{$line['label']}<ul>\n";
-                $menuend="</ul></li>\n";
-            }
-        } else {
-            if (empty($_SESSION['keys'][$line['link']]))
-                $keypress='';
-            else {
-                $menu[$index]['key']=$key=$_SESSION['keys'][$line['link']];
-                $keypress=" ($key)";
-                $accesskeys.="<a href='{$line['link']}' accesskey='$key'></a>";
-            }
-	        echo "<li$class>\n"
-                ,"<a href='{$line['link']}' title='{$line['title']}'>"
-                ,"{$line['label']}$keypress</a></li>\n";
-            $class='';
-        }
-    }
-    echo $menuend;
-    ?>
-	</ul>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+  <?php
+  $accesskeys=$class=$menuend='';
+  foreach ($menu as $index=>$line) {
+      if (empty($line['link'])) {
+          if ($line['label']==='separator') {
+              $class=" class='menuseparator' ";
+          } else {
+              echo "$menuend";
+              echo "<li class='nav-item dropdown'>\n";
+              echo "<a class='nav-link dropdown-toggle' href='#' id='navbar{$line['label']}' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>{$line['label']}</a>\n";
+              echo "<div class='dropdown-menu' aria-labelledby='navbar{$line['label']}'>\n";
+              $menuend="</div></li>\n";
+          }
+      } else {
+          if (empty($_SESSION['keys'][$line['link']]))
+              $keypress='';
+          else {
+              $menu[$index]['key']=$key=$_SESSION['keys'][$line['link']];
+              $keypress=" ($key)";
+              $accesskeys.="<a href='{$line['link']}' accesskey='$key'></a>";
+          }
+          if ($class) {
+            echo '<div class="dropdown-divider"></div>';
+          }
+          echo "<a class='dropdown-item' href='{$line['link']}' title='{$line['title']}'>"
+              ,"{$line['label']}$keypress</a>\n";
+          $class='';
+      }
+  }
+  echo $menuend;
+  ?>
+    </ul>
+  </div>
+</nav>
+
 	<div id='accesskeys'><?php echo $accesskeys; ?></div>
 </div>
